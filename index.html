@@ -18,20 +18,20 @@ html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--tx);font-family:var(--sans);min-height:100vh;}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.92);backdrop-filter:blur(12px);border-bottom:.5px solid var(--bd2);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem;}
-.nav-brand{font-family:var(--mono);font-size:11px;color:var(--mt);letter-spacing:.1em;text-transform:uppercase;flex:1;}
+nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.94);backdrop-filter:blur(12px);border-bottom:.5px solid var(--bd2);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem;}
+.nav-brand{font-family:var(--mono);font-size:10px;color:var(--mt);letter-spacing:.1em;text-transform:uppercase;flex:1;}
 .nav-tabs{display:flex;gap:4px;}
-.ntab{font-family:var(--mono);font-size:11px;padding:5px 14px;border-radius:4px;border:.5px solid transparent;background:transparent;color:var(--mt);cursor:pointer;transition:all .15s;letter-spacing:.03em;}
+.ntab{font-family:var(--mono);font-size:11px;padding:5px 14px;border-radius:4px;border:.5px solid transparent;background:transparent;color:var(--mt);cursor:pointer;transition:all .15s;}
 .ntab:hover{color:var(--tx);border-color:var(--bd2);}
-.ntab.on{background:rgba(79,142,247,.15);border-color:var(--bl);color:var(--bl);}
+.ntab.on{background:rgba(79,142,247,.14);border-color:var(--bl);color:var(--bl);}
 
 /* SECTIONS */
-.section{max-width:1020px;margin:0 auto;padding:2rem 1.25rem;}
-.section-title{font-size:13px;font-weight:500;color:var(--mt);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px;}
-.section-title::before{content:'';width:3px;height:14px;background:var(--bl);border-radius:2px;display:inline-block;}
+.section{max-width:1020px;margin:0 auto;padding:2rem 1.25rem 3rem;}
+.sec-title{font-size:12px;font-weight:500;color:var(--mt);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px;}
+.sec-title::before{content:'';width:3px;height:14px;background:var(--bl);border-radius:2px;flex-shrink:0;}
 
-/* PERIOD CTRL */
-.ctrl-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:1.5rem;}
+/* PERIOD */
+.ctrl-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;}
 .ctrl-lbl{font-size:11px;color:var(--mt);font-family:var(--mono);margin-right:2px;}
 .pbtn{font-family:var(--mono);font-size:11px;padding:4px 13px;border-radius:3px;border:.5px solid var(--bd2);background:transparent;color:var(--mt);cursor:pointer;transition:all .15s;}
 .pbtn:hover{border-color:var(--bl);color:var(--bl);}
@@ -39,16 +39,16 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.92);backdrop-fil
 .pinfo{font-family:var(--mono);font-size:11px;color:var(--ht);margin-left:auto;}
 
 /* PROGRESS */
-.pgbar{height:1.5px;background:var(--bd);border-radius:2px;overflow:hidden;margin-bottom:.5rem;}
+.pgbar{height:1.5px;background:var(--bd);border-radius:2px;overflow:hidden;margin-bottom:.4rem;}
 .pgfill{height:100%;background:linear-gradient(90deg,var(--bl),var(--pu));width:0%;transition:width .4s;}
-.strow{display:none;align-items:center;gap:8px;font-size:12px;color:var(--mt);margin-bottom:.75rem;}
+.strow{display:none;align-items:center;gap:8px;font-size:12px;color:var(--mt);margin-bottom:.6rem;}
 .spin{width:13px;height:13px;border:1.5px solid var(--bd2);border-top-color:var(--bl);border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.src-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:3px;margin-bottom:1rem;}
+.src-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:3px;margin-bottom:.9rem;}
 .src-badge.ai{background:rgba(124,92,252,.12);color:#a78bfa;border:.5px solid rgba(124,92,252,.28);}
 .src-badge.st{background:rgba(34,197,94,.09);color:#4ade80;border:.5px solid rgba(34,197,94,.22);}
 
-/* MATRIX TABLE */
+/* MATRIX */
 .mwrap{background:var(--s1);border:.5px solid var(--bd2);border-radius:10px;overflow:hidden;display:none;margin-bottom:1.5rem;}
 .mscroll{overflow-x:auto;}
 table.cm{border-collapse:collapse;width:100%;min-width:600px;}
@@ -60,88 +60,109 @@ table.cm th,table.cm td{padding:0;}
 .rn{font-size:11px;font-weight:500;color:var(--tx);display:block;white-space:nowrap;}
 .rs{font-size:10px;color:var(--mt);font-family:var(--mono);display:block;margin-top:1px;}
 .ctd{padding:2.5px;}
-.cell{width:68px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-family:var(--mono);font-size:12px;font-weight:500;transition:transform .12s;cursor:pointer;}
-.cell:not(.diag):hover{transform:scale(1.09);z-index:2;position:relative;}
+.cell{width:68px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-family:var(--mono);font-size:12px;font-weight:500;transition:transform .12s;}
+.cell.hov{cursor:pointer;}
+.cell.hov:hover{transform:scale(1.09);z-index:2;position:relative;}
 .cell.diag{cursor:default;}
 
 /* INSIGHT CARDS */
-.icards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:1.5rem;}
+.icards{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px;margin-bottom:1.5rem;}
 .ic{background:var(--s1);border:.5px solid var(--bd);border-radius:7px;padding:10px 13px;}
 .icl{font-size:10px;color:var(--mt);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
 .icv{font-size:17px;font-weight:600;font-family:var(--mono);}
 .ics{font-size:11px;color:var(--mt);margin-top:2px;line-height:1.4;}
 
 /* ETF LIST */
-.etf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:7px;margin-bottom:1.5rem;}
+.etf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:7px;}
 .etf-card{background:var(--s1);border:.5px solid var(--bd);border-radius:6px;padding:8px 11px;display:flex;align-items:center;gap:9px;}
 .etf-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
 .etf-name{font-size:11px;font-weight:500;color:var(--tx);}
 .etf-meta{font-size:10px;color:var(--mt);font-family:var(--mono);margin-top:1px;}
 
-/* ── OPTIMIZER ── */
-.opt-layout{display:grid;grid-template-columns:320px 1fr;gap:1.25rem;align-items:start;}
-@media(max-width:768px){.opt-layout{grid-template-columns:1fr;}}
-
-.opt-panel{background:var(--s1);border:.5px solid var(--bd2);border-radius:10px;padding:1.25rem;}
-.opt-panel-title{font-size:11px;font-family:var(--mono);color:var(--mt);text-transform:uppercase;letter-spacing:.07em;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:.5px solid var(--bd);}
-
-/* sliders */
-.slider-row{margin-bottom:.9rem;}
-.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
-.sl-name{font-size:12px;color:var(--tx);display:flex;align-items:center;gap:6px;}
-.sl-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
-.sl-val{font-family:var(--mono);font-size:12px;color:var(--bl);min-width:38px;text-align:right;}
-input[type=range]{width:100%;height:3px;border-radius:2px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background:var(--bd2);}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--bl);cursor:pointer;border:2px solid var(--bg);}
-
-.opt-divider{border:none;border-top:.5px solid var(--bd);margin:.75rem 0;}
-.opt-mode-row{display:flex;gap:6px;margin-bottom:1rem;}
-.mode-btn{flex:1;font-family:var(--mono);font-size:11px;padding:6px 8px;border-radius:4px;border:.5px solid var(--bd2);background:transparent;color:var(--mt);cursor:pointer;transition:all .15s;text-align:center;}
-.mode-btn:hover{border-color:var(--bl);color:var(--bl);}
-.mode-btn.on{background:rgba(79,142,247,.14);border-color:var(--bl);color:var(--bl);font-weight:500;}
-
-.run-btn{width:100%;padding:10px;border-radius:5px;border:none;background:var(--bl2);color:#fff;font-family:var(--mono);font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.04em;transition:all .15s;margin-top:.5rem;}
-.run-btn:hover{background:var(--bl);}
-.run-btn:active{transform:scale(.98);}
-
-/* chart area */
-.chart-area{background:var(--s1);border:.5px solid var(--bd2);border-radius:10px;padding:1.25rem;min-height:460px;position:relative;}
-.chart-title{font-size:11px;font-family:var(--mono);color:var(--mt);text-transform:uppercase;letter-spacing:.07em;margin-bottom:1rem;}
-#frontierCanvas{width:100%;border-radius:4px;}
-
-/* result cards */
-.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:1rem;}
-.rc{background:var(--s2);border:.5px solid var(--bd);border-radius:7px;padding:10px 12px;}
-.rcl{font-size:10px;color:var(--mt);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
-.rcv{font-size:16px;font-weight:600;font-family:var(--mono);color:var(--tx);}
-.rcs{font-size:11px;color:var(--mt);margin-top:2px;}
-
-/* weight bars */
-.weight-section{margin-top:1.25rem;}
-.weight-title{font-size:11px;font-family:var(--mono);color:var(--mt);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem;}
-.wbar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
-.wbar-label{font-size:11px;color:var(--tx);min-width:80px;white-space:nowrap;}
-.wbar-track{flex:1;height:8px;background:var(--bd2);border-radius:4px;overflow:hidden;}
-.wbar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.4,0,.2,1);}
-.wbar-pct{font-family:var(--mono);font-size:11px;color:var(--bl);min-width:36px;text-align:right;}
-
-/* tooltip */
-#tt{position:fixed;background:var(--s3);border:.5px solid var(--bd2);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--tx);pointer-events:none;z-index:300;display:none;min-width:185px;line-height:1.65;box-shadow:0 8px 32px rgba(0,0,0,.6);}
-.ttp{font-family:var(--mono);font-size:10px;color:var(--mt);}
-.ttv{font-size:21px;font-weight:500;font-family:var(--mono);margin:2px 0 2px;}
-.ttd{font-size:11px;color:var(--mt);}
-
 /* legend */
-.legend-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:1rem;}
+.legend-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:1.25rem;}
 .ll{font-size:11px;color:var(--mt);font-family:var(--mono);margin-right:2px;}
 .li{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--mt);}
 .ls{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
 
+/* ══ OPTIMIZER ══ */
+/* 성향 탭 */
+.profile-tabs{display:flex;gap:10px;margin-bottom:1.75rem;}
+.ptab{flex:1;padding:1rem;border-radius:10px;border:.5px solid var(--bd2);background:var(--s1);cursor:pointer;transition:all .2s;text-align:center;}
+.ptab:hover{border-color:var(--bd3);}
+.ptab.on.aggressive{border-color:#ef4444;background:rgba(239,68,68,.08);}
+.ptab.on.neutral   {border-color:#4f8ef7;background:rgba(79,142,247,.08);}
+.ptab.on.stable    {border-color:#22c55e;background:rgba(34,197,94,.08);}
+.ptab-icon{font-size:22px;margin-bottom:6px;}
+.ptab-name{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:3px;}
+.ptab-desc{font-size:10px;color:var(--mt);font-family:var(--mono);line-height:1.5;}
+.ptab.on.aggressive .ptab-name{color:#f87171;}
+.ptab.on.neutral    .ptab-name{color:#60a5fa;}
+.ptab.on.stable     .ptab-name{color:#4ade80;}
+
+/* 결과 카드 3분할 */
+.result-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.75rem;}
+@media(max-width:700px){.result-panels{grid-template-columns:1fr;}}
+.rpanel{background:var(--s1);border:.5px solid var(--bd2);border-radius:10px;overflow:hidden;transition:border-color .2s;}
+.rpanel.active.aggressive{border-color:#ef4444;}
+.rpanel.active.neutral   {border-color:#4f8ef7;}
+.rpanel.active.stable    {border-color:#22c55e;}
+.rpanel-head{padding:.85rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:.5px solid var(--bd);}
+.rpanel-title{font-size:12px;font-weight:600;}
+.rpanel-badge{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:3px;}
+.aggressive .rpanel-title{color:#f87171;} .aggressive .rpanel-badge{background:rgba(239,68,68,.12);color:#f87171;}
+.neutral    .rpanel-title{color:#60a5fa;} .neutral    .rpanel-badge{background:rgba(79,142,247,.12);color:#60a5fa;}
+.stable     .rpanel-title{color:#4ade80;} .stable     .rpanel-badge{background:rgba(34,197,94,.12);color:#4ade80;}
+
+.rpanel-stats{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:.5px solid var(--bd);}
+.rstat{padding:.6rem .85rem;border-right:.5px solid var(--bd);}
+.rstat:nth-child(even){border-right:none;}
+.rstat-l{font-size:10px;color:var(--mt);font-family:var(--mono);margin-bottom:2px;}
+.rstat-v{font-size:14px;font-weight:600;font-family:var(--mono);}
+
+/* 도넛 차트 영역 */
+.rpanel-chart{padding:.85rem;display:flex;align-items:center;gap:.75rem;}
+.donut-wrap{position:relative;width:90px;height:90px;flex-shrink:0;}
+.donut-wrap canvas{width:90px!important;height:90px!important;}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;}
+.donut-pct{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--tx);line-height:1;}
+.donut-sub{font-size:9px;color:var(--mt);margin-top:2px;}
+
+/* 비중 바 */
+.wbars{flex:1;}
+.wbar-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.wbar-name{font-size:10px;color:var(--tx);min-width:52px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wbar-track{flex:1;height:6px;background:var(--bd2);border-radius:3px;overflow:hidden;}
+.wbar-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+.wbar-pct{font-family:var(--mono);font-size:10px;color:var(--mt);min-width:30px;text-align:right;}
+
+/* 상세 테이블 */
+.detail-table{width:100%;margin-top:1.5rem;border-collapse:collapse;display:none;}
+.detail-table th{font-size:10px;font-family:var(--mono);color:var(--mt);text-transform:uppercase;letter-spacing:.06em;padding:.5rem .75rem;border-bottom:.5px solid var(--bd2);text-align:left;}
+.detail-table td{font-size:12px;padding:.55rem .75rem;border-bottom:.5px solid var(--bd);vertical-align:middle;}
+.detail-table tr:last-child td{border-bottom:none;}
+.detail-table tr:hover td{background:rgba(255,255,255,.02);}
+.detail-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mt);font-family:var(--mono);cursor:pointer;margin-top:1rem;user-select:none;}
+.detail-toggle:hover{color:var(--tx);}
+
+/* mmf 안내 */
+.mmf-note{background:rgba(34,197,94,.06);border:.5px solid rgba(34,197,94,.2);border-radius:7px;padding:.65rem 1rem;font-size:11px;color:#86efac;font-family:var(--mono);margin-bottom:1.5rem;line-height:1.7;}
+
+/* 재계산 버튼 */
+.recalc-btn{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;padding:7px 16px;border-radius:5px;border:.5px solid var(--bd2);background:transparent;color:var(--mt);cursor:pointer;transition:all .15s;margin-left:auto;}
+.recalc-btn:hover{border-color:var(--bl);color:var(--bl);}
+
+/* tooltip */
+#tt{position:fixed;background:var(--s3);border:.5px solid var(--bd2);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--tx);pointer-events:none;z-index:300;display:none;min-width:185px;line-height:1.65;box-shadow:0 8px 32px rgba(0,0,0,.6);}
+.ttp{font-family:var(--mono);font-size:10px;color:var(--mt);}
+.ttv{font-size:20px;font-weight:500;font-family:var(--mono);margin:2px 0 2px;}
+.ttd{font-size:11px;color:var(--mt);}
+
 /* footer */
-.footer{max-width:1020px;margin:2rem auto 0;padding:1.25rem 1.25rem 3rem;font-size:11px;color:var(--ht);font-family:var(--mono);line-height:1.9;border-top:.5px solid var(--bd);}
+.footer{max-width:1020px;margin:0 auto;padding:1.25rem 1.25rem 3rem;font-size:11px;color:var(--ht);font-family:var(--mono);line-height:1.9;border-top:.5px solid var(--bd);}
 .ftag{display:inline-block;background:rgba(79,142,247,.08);color:var(--bl);border:.5px solid rgba(79,142,247,.2);border-radius:3px;padding:1px 6px;font-size:10px;margin-right:4px;}
 
-@media(max-width:580px){.cell{width:54px;height:42px;font-size:11px;}.rth{min-width:64px;}}
+@media(max-width:580px){.cell{width:54px;height:42px;font-size:11px;}.rth{min-width:64px;} .profile-tabs{flex-direction:column;}}
 </style>
 </head>
 <body>
@@ -149,14 +170,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <nav>
   <span class="nav-brand">KR ETF Portfolio Optimizer</span>
   <div class="nav-tabs">
-    <button class="ntab on" onclick="showTab('corr')">상관계수</button>
-    <button class="ntab" onclick="showTab('opt')">포트폴리오 최적화</button>
+    <button class="ntab on" onclick="showTab('corr')">상관계수 매트릭스</button>
+    <button class="ntab" onclick="showTab('opt')">투자성향별 자산배분</button>
   </div>
 </nav>
 
-<!-- ── TAB 1: 상관계수 ── -->
+<!-- ══ TAB 1: 상관계수 ══ -->
 <div id="tab-corr" class="section">
-  <div class="section-title">국내 상장 ETF 상관계수 매트릭스</div>
+  <div class="sec-title">국내 상장 ETF 상관계수 매트릭스</div>
 
   <div class="ctrl-row">
     <span class="ctrl-lbl">조회 기간</span>
@@ -170,7 +191,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <div class="pgbar"><div class="pgfill" id="pg"></div></div>
   <div class="strow" id="strow"><div class="spin"></div><span id="stxt"></span></div>
   <div id="srcbadge"></div>
-
   <div class="mwrap" id="mwrap"><div class="mscroll" id="mscroll"></div></div>
   <div class="icards" id="icards"></div>
 
@@ -185,114 +205,144 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   </div>
 
   <div style="margin-top:1.5rem;">
-    <div class="section-title" style="margin-bottom:.75rem;">참고 ETF</div>
+    <div class="sec-title" style="margin-bottom:.75rem;">참고 ETF</div>
     <div class="etf-grid" id="etfgrid"></div>
   </div>
 </div>
 
-<!-- ── TAB 2: 포트폴리오 최적화 ── -->
+<!-- ══ TAB 2: 자산배분 ══ -->
 <div id="tab-opt" class="section" style="display:none;">
-  <div class="section-title">효율적 프론티어 & 포트폴리오 최적화</div>
+  <div class="sec-title">투자성향별 최적 자산배분</div>
 
-  <div class="opt-layout">
-    <!-- 왼쪽: 입력 패널 -->
-    <div>
-      <div class="opt-panel">
-        <div class="opt-panel-title">기대수익률 설정 (연간 %)</div>
-        <div id="sliders"></div>
+  <div class="mmf-note">
+    ✦ 공통 제약: MMF(TIGER CD금리투자KIS · 357870)는 모든 성향에서 <strong>최소 20% 이상</strong> 편입 — 유동성 및 원금 보전 목적
+  </div>
 
-        <hr class="opt-divider">
-        <div class="opt-panel-title">최적화 목표</div>
-        <div class="opt-mode-row">
-          <button class="mode-btn on" data-m="sharpe">최대 샤프지수</button>
-          <button class="mode-btn" data-m="minvol">최소 변동성</button>
-          <button class="mode-btn" data-m="maxret">최대 수익률</button>
-        </div>
-
-        <hr class="opt-divider">
-        <div class="opt-panel-title">제약 조건</div>
-        <div class="slider-row">
-          <div class="slider-label">
-            <span class="sl-name">자산별 최대 비중</span>
-            <span class="sl-val" id="maxw-val">60%</span>
-          </div>
-          <input type="range" id="maxw" min="20" max="100" step="5" value="60"
-            oninput="document.getElementById('maxw-val').textContent=this.value+'%'">
-        </div>
-        <div class="slider-row">
-          <div class="slider-label">
-            <span class="sl-name">무위험 수익률 (MMF)</span>
-            <span class="sl-val" id="rf-val">3.5%</span>
-          </div>
-          <input type="range" id="rf" min="0" max="6" step="0.1" value="3.5"
-            oninput="document.getElementById('rf-val').textContent=parseFloat(this.value).toFixed(1)+'%'">
-        </div>
-
-        <hr class="opt-divider">
-        <div class="opt-panel-title">변동성 가정 (연간 %)</div>
-        <div id="vol-sliders"></div>
-
-        <button class="run-btn" onclick="runOptimizer()">▶ 최적화 실행</button>
-      </div>
+  <!-- 성향 선택 탭 -->
+  <div class="profile-tabs">
+    <div class="ptab aggressive on" onclick="selectProfile('aggressive')">
+      <div class="ptab-icon">🚀</div>
+      <div class="ptab-name">공격형</div>
+      <div class="ptab-desc">수익 극대화 목표<br>높은 변동성 감내</div>
     </div>
-
-    <!-- 오른쪽: 차트 + 결과 -->
-    <div>
-      <div class="chart-area">
-        <div class="chart-title">효율적 프론티어 (Efficient Frontier)</div>
-        <canvas id="frontierCanvas"></canvas>
-        <div class="result-grid" id="result-grid" style="display:none;"></div>
-      </div>
-
-      <div class="weight-section" id="weight-section" style="display:none;">
-        <div class="weight-title">최적 포트폴리오 자산 배분</div>
-        <div id="weight-bars"></div>
-      </div>
+    <div class="ptab neutral" onclick="selectProfile('neutral')">
+      <div class="ptab-icon">⚖️</div>
+      <div class="ptab-name">중립형</div>
+      <div class="ptab-desc">수익·안정 균형<br>샤프지수 최대화</div>
     </div>
+    <div class="ptab stable" onclick="selectProfile('stable')">
+      <div class="ptab-icon">🛡️</div>
+      <div class="ptab-name">안정형</div>
+      <div class="ptab-desc">원금 보전 우선<br>변동성 최소화</div>
+    </div>
+  </div>
+
+  <!-- 3개 결과 패널 -->
+  <div class="result-panels" id="result-panels">
+    <div class="rpanel aggressive" id="panel-aggressive">
+      <div class="rpanel-head">
+        <span class="rpanel-title">공격형</span>
+        <span class="rpanel-badge">수익 극대화</span>
+      </div>
+      <div class="rpanel-stats" id="stats-aggressive"></div>
+      <div class="rpanel-chart" id="chart-aggressive"></div>
+    </div>
+    <div class="rpanel neutral" id="panel-neutral">
+      <div class="rpanel-head">
+        <span class="rpanel-title">중립형</span>
+        <span class="rpanel-badge">샤프 최대화</span>
+      </div>
+      <div class="rpanel-stats" id="stats-neutral"></div>
+      <div class="rpanel-chart" id="chart-neutral"></div>
+    </div>
+    <div class="rpanel stable" id="panel-stable">
+      <div class="rpanel-head">
+        <span class="rpanel-title">안정형</span>
+        <span class="rpanel-badge">변동성 최소화</span>
+      </div>
+      <div class="rpanel-stats" id="stats-stable"></div>
+      <div class="rpanel-chart" id="chart-stable"></div>
+    </div>
+  </div>
+
+  <!-- 상세 테이블 토글 -->
+  <div class="detail-toggle" onclick="toggleDetail()">
+    <span id="detail-arrow">▶</span>
+    <span>자산별 상세 비중 보기</span>
+  </div>
+  <table class="detail-table" id="detail-table">
+    <thead>
+      <tr>
+        <th>ETF</th><th>종목코드</th>
+        <th style="color:#f87171">공격형</th>
+        <th style="color:#60a5fa">중립형</th>
+        <th style="color:#4ade80">안정형</th>
+        <th>분류</th>
+      </tr>
+    </thead>
+    <tbody id="detail-tbody"></tbody>
+  </table>
+
+  <div style="display:flex;margin-top:1.5rem;">
+    <button class="recalc-btn" onclick="runAllProfiles()">↻ 재계산</button>
   </div>
 </div>
 
 <div class="footer">
   <span class="ftag">ETF</span>069500 · 360750 · 148070 · 305080 · 411060 · 261240 · 357870<br>
-  <span class="ftag">NOTE</span>본 시뮬레이션은 과거 데이터 기반 추정이며 미래 수익을 보장하지 않습니다. 투자 권유 아닙니다.
+  <span class="ftag">NOTE</span>본 시뮬레이션은 과거 데이터 기반 추정이며 미래 수익을 보장하지 않습니다. 투자 권유 아닙니다.<br>
+  <span class="ftag">METHOD</span>몬테카를로 시뮬레이션 + 경사하강 최적화 · MMF 최소 20% 제약
 </div>
 
 <div id="tt"><div class="ttp" id="ttp"></div><div class="ttv" id="ttv"></div><div class="ttd" id="ttd"></div></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 /* ════════════════════════════════════════
-   DATA
+   CONSTANTS
 ════════════════════════════════════════ */
 const ETFS = [
-  { code:'069500', name:'KODEX 200',           sub:'KOSPI200',       asset:'국내주식', color:'#3b82f6' },
-  { code:'360750', name:'TIGER 미국S&P500',    sub:'S&P500(환노출)', asset:'미국주식', color:'#8b5cf6' },
-  { code:'148070', name:'KODEX 국채선물10년',  sub:'국고채 10년물',  asset:'국내채권', color:'#10b981' },
-  { code:'305080', name:'TIGER 미국채10년선물',sub:'미국채 10년',    asset:'해외채권', color:'#06b6d4' },
-  { code:'411060', name:'ACE KRX금현물',       sub:'KRX 금 현물',   asset:'금',       color:'#f59e0b' },
-  { code:'261240', name:'KODEX 미국달러선물',  sub:'USD/KRW 선물',  asset:'달러',     color:'#ef4444' },
-  { code:'357870', name:'TIGER CD금리투자KIS', sub:'CD 91일물(MMF)', asset:'MMF',      color:'#6b7280' },
+  { code:'069500', name:'KODEX 200',            sub:'KOSPI200',       asset:'국내주식', color:'#3b82f6' },
+  { code:'360750', name:'TIGER 미국S&P500',     sub:'S&P500(환노출)', asset:'미국주식', color:'#8b5cf6' },
+  { code:'148070', name:'KODEX 국채선물10년',   sub:'국고채 10년물',  asset:'국내채권', color:'#10b981' },
+  { code:'305080', name:'TIGER 미국채10년선물', sub:'미국채 10년',    asset:'해외채권', color:'#06b6d4' },
+  { code:'411060', name:'ACE KRX금현물',        sub:'KRX 금 현물',   asset:'금',       color:'#f59e0b' },
+  { code:'261240', name:'KODEX 미국달러선물',   sub:'USD/KRW 선물',  asset:'달러',     color:'#ef4444' },
+  { code:'357870', name:'TIGER CD금리투자KIS',  sub:'CD 91일물(MMF)', asset:'MMF',      color:'#6b7280' },
 ];
-const N = ETFS.length;
+const N = 7;
+const MMF_IDX = 6; // TIGER CD금리투자KIS
 
-const CORR = {
+// 기대수익률 (연간 %)
+const EXP_RET = [7.0, 11.0, 2.5, 4.5, 8.0, 3.0, 3.5];
+// 연간 변동성 (%)
+const EXP_VOL = [18.0, 20.0, 5.0, 12.0, 16.0, 8.0, 0.5];
+// 무위험 수익률
+const RF = 0.035;
+
+const CORR_DATA = {
   1:[[1,.62,-.28,.14,.18,-.45,.02],[.62,1,-.21,.31,.26,-.38,.04],[-.28,-.21,1,.41,.12,.18,.15],[.14,.31,.41,1,.38,-.06,.08],[.18,.26,.12,.38,1,-.52,.05],[-.45,-.38,.18,-.06,-.52,1,.03],[.02,.04,.15,.08,.05,.03,1]],
   3:[[1,.65,-.22,.11,.14,-.41,.01],[.65,1,-.26,.28,.19,-.39,.03],[-.22,-.26,1,.46,.21,.13,.12],[.11,.28,.46,1,.35,-.08,.06],[.14,.19,.21,.35,1,-.56,.04],[-.41,-.39,.13,-.08,-.56,1,.02],[.01,.03,.12,.06,.04,.02,1]],
   5:[[1,.71,-.19,.09,.12,-.43,.01],[.71,1,-.23,.25,.16,-.40,.02],[-.19,-.23,1,.49,.26,.11,.10],[.09,.25,.49,1,.33,-.10,.05],[.12,.16,.26,.33,1,-.59,.03],[-.43,-.40,.11,-.10,-.59,1,.01],[.01,.02,.10,.05,.03,.01,1]],
   10:[[1,.68,-.17,.10,.08,-.42,.01],[.68,1,-.20,.26,.13,-.37,.02],[-.17,-.20,1,.52,.28,.09,.09],[.10,.26,.52,1,.31,-.12,.04],[.08,.13,.28,.31,1,-.61,.02],[-.42,-.37,.09,-.12,-.61,1,.01],[.01,.02,.09,.04,.02,.01,1]]
 };
-const PERIOD_LABEL = {
-  1:'2024.05 – 2025.05', 3:'2022.05 – 2025.05',
-  5:'2020.05 – 2025.05', 10:'2015.05 – 2025.05'
+const PERIOD_LABEL = {1:'2024.05–2025.05',3:'2022.05–2025.05',5:'2020.05–2025.05',10:'2015.05–2025.05'};
+
+// 성향별 제약
+const PROFILES = {
+  aggressive: { label:'공격형', mode:'maxret',  maxW:0.50, mmfMin:0.20, maxRisky:0.50 },
+  neutral:    { label:'중립형', mode:'sharpe',  maxW:0.45, mmfMin:0.20, maxRisky:0.40 },
+  stable:     { label:'안정형', mode:'minvol',  maxW:0.40, mmfMin:0.30, maxRisky:0.25 },
 };
+// risky = 주식형 (국내주식, 미국주식)
+const RISKY_IDX = [0, 1];
+// safe = 채권+금+달러+MMF
+const SAFE_IDX  = [2, 3, 4, 5, 6];
 
-// 기본 기대수익률·변동성 (연간 %)
-const DEF_RET = [7, 12, 2, 4, 8, 3, 3.5];
-const DEF_VOL = [18, 20, 5, 12, 16, 8, 0.5];
-
-let curP = 5, curMat = CORR[5], curMode = 'sharpe';
-let frontierChart = null;
-let apiCache = {};
+let curP = 5, curMat = CORR_DATA[5];
+let apiCache = {}, optResults = {};
+let donutCharts = {};
+let curProfile = 'aggressive';
+let detailOpen = false;
 
 const pad = n => String(n).padStart(2,'0');
 
@@ -300,13 +350,267 @@ const pad = n => String(n).padStart(2,'0');
    TAB
 ════════════════════════════════════════ */
 function showTab(id) {
-  ['corr','opt'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===id ? '' : 'none';
-    document.querySelectorAll('.ntab').forEach((b,i) => {
-      if ((i===0&&t==='corr')||(i===1&&t==='opt')) b.classList.toggle('on', t===id);
-    });
+  document.getElementById('tab-corr').style.display = id==='corr'?'':'none';
+  document.getElementById('tab-opt').style.display  = id==='opt' ?'':'none';
+  document.querySelectorAll('.ntab').forEach((b,i)=>b.classList.toggle('on',(i===0&&id==='corr')||(i===1&&id==='opt')));
+  if (id==='opt' && !optResults.aggressive) runAllProfiles();
+}
+
+/* ════════════════════════════════════════
+   성향 선택
+════════════════════════════════════════ */
+function selectProfile(p) {
+  curProfile = p;
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  document.querySelector('.ptab.'+p).classList.add('on');
+  // 패널 하이라이트
+  document.querySelectorAll('.rpanel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('panel-'+p).classList.add('active',p);
+}
+
+/* ════════════════════════════════════════
+   MATH UTILS
+════════════════════════════════════════ */
+function buildCov(vols, corr) {
+  return Array.from({length:N},(_,i)=>Array.from({length:N},(_,j)=>vols[i]*vols[j]*corr[i][j]));
+}
+
+function portStats(w, rets, cov) {
+  const ret = w.reduce((s,wi,i)=>s+wi*rets[i],0);
+  let v = 0;
+  for(let i=0;i<N;i++) for(let j=0;j<N;j++) v+=w[i]*w[j]*cov[i][j];
+  return { ret, vol: Math.sqrt(Math.max(v,0)) };
+}
+
+function score(p, rets, cov, mode) {
+  const {ret,vol} = portStats(p.w, rets, cov);
+  const sharpe = vol>0?(ret-RF)/vol:0;
+  p.ret=ret; p.vol=vol; p.sharpe=sharpe;
+  if(mode==='maxret')  return ret;
+  if(mode==='sharpe')  return sharpe;
+  if(mode==='minvol')  return -vol;
+  return sharpe;
+}
+
+// 제약 조건에 맞는 랜덤 가중치 생성
+function randWeights(profile) {
+  const cfg = PROFILES[profile];
+  const w = new Array(N).fill(0);
+
+  // MMF 최소 비중 보장
+  w[MMF_IDX] = cfg.mmfMin + Math.random()*(1-cfg.mmfMin-0.01);
+
+  // 나머지 배분
+  let rem = 1 - w[MMF_IDX];
+  const others = Array.from({length:N-1},(_,i)=>i); // 0~5
+
+  // 공격형: 주식 비중 높게, 안정형: 안전자산 높게
+  const raw = others.map(i=>{
+    if(RISKY_IDX.includes(i)){
+      const base = profile==='aggressive'?0.3:profile==='neutral'?0.2:0.1;
+      return Math.random()*base;
+    } else {
+      const base = profile==='stable'?0.25:profile==='neutral'?0.18:0.12;
+      return Math.random()*base;
+    }
   });
-  if (id === 'opt') initOptimizer();
+
+  // 리스키 자산 합계 제한
+  const riskySum = RISKY_IDX.reduce((s,i)=>s+raw[i],0);
+  if(riskySum > cfg.maxRisky*rem) {
+    const scale = cfg.maxRisky*rem/riskySum;
+    RISKY_IDX.forEach(i=>raw[i]*=scale);
+  }
+
+  // 정규화
+  const s = raw.reduce((a,b)=>a+b,0);
+  if(s===0) others.forEach(i=>raw[i]=rem/(N-1));
+  else others.forEach(i=>raw[i]=raw[i]/s*rem);
+
+  // maxW 제약
+  others.forEach(i=>{
+    if(raw[i]>cfg.maxW){ const excess=raw[i]-cfg.maxW; raw[i]=cfg.maxW; raw[MMF_IDX]+=excess; }
+  });
+  if(w[MMF_IDX]>cfg.maxW*1.5) { const diff=w[MMF_IDX]-cfg.maxW*1.5; w[MMF_IDX]=cfg.maxW*1.5; raw[2]+=diff*0.5; raw[3]+=diff*0.5; }
+
+  others.forEach(i=>w[i]=Math.max(0,raw[i]));
+
+  // 최종 정규화
+  const total = w.reduce((a,b)=>a+b,0);
+  return w.map(x=>Math.round(x/total*1000)/1000);
+}
+
+// 경사하강 개선
+function refine(w0, rets, cov, profile, iters) {
+  const cfg = PROFILES[profile];
+  let best = { w:[...w0] };
+  best.score = score(best, rets, cov, cfg.mode);
+  let step = 0.015;
+
+  for(let it=0;it<iters;it++){
+    let improved=false;
+    for(let i=0;i<N;i++){
+      for(let j=0;j<N;j++){
+        if(i===j) continue;
+        const w2=[...best.w];
+        w2[i]+=step; w2[j]-=step;
+        // 제약 체크
+        if(w2[i]>cfg.maxW+0.001) continue;
+        if(w2[j]<0) continue;
+        if(i===MMF_IDX && w2[i]<cfg.mmfMin) continue;
+        if(j===MMF_IDX && w2[j]<cfg.mmfMin) continue;
+        if(RISKY_IDX.includes(i)){
+          const rs=RISKY_IDX.reduce((s,k)=>s+w2[k],0);
+          if(rs>cfg.maxRisky+0.001) continue;
+        }
+        const s2={w:w2,score:0};
+        s2.score=score(s2,rets,cov,cfg.mode);
+        if(s2.score>best.score){best=s2;improved=true;}
+      }
+    }
+    if(!improved) step*=0.75;
+    if(step<0.001) break;
+  }
+  return best;
+}
+
+/* ════════════════════════════════════════
+   OPTIMIZE
+════════════════════════════════════════ */
+function optimize(profile, rets, cov) {
+  const SAMPLES = 3000;
+  let best = null;
+  const cfg = PROFILES[profile];
+
+  for(let s=0;s<SAMPLES;s++){
+    const w = randWeights(profile);
+    const p = {w};
+    p.score = score(p, rets, cov, cfg.mode);
+    if(!best || p.score>best.score) best=p;
+  }
+
+  // 정밀 개선
+  best = refine(best.w, rets, cov, profile, 120);
+
+  // 최종 정규화 & 소수점 정리
+  const total = best.w.reduce((a,b)=>a+b,0);
+  best.w = best.w.map(x=>Math.round(x/total*1000)/1000);
+  const {ret,vol} = portStats(best.w, rets, cov);
+  best.ret = ret; best.vol = vol;
+  best.sharpe = vol>0?(ret-RF)/vol:0;
+  return best;
+}
+
+function runAllProfiles() {
+  const rets = EXP_RET.map(x=>x/100);
+  const vols = EXP_VOL.map(x=>x/100);
+  const cov = buildCov(vols, curMat);
+
+  ['aggressive','neutral','stable'].forEach(p=>{
+    const res = optimize(p, rets, cov);
+    optResults[p] = res;
+    renderPanel(p, res);
+  });
+  renderDetailTable();
+  selectProfile(curProfile);
+}
+
+/* ════════════════════════════════════════
+   RENDER PANEL
+════════════════════════════════════════ */
+function renderPanel(profile, res) {
+  // 통계
+  document.getElementById('stats-'+profile).innerHTML = `
+    <div class="rstat">
+      <div class="rstat-l">기대수익률</div>
+      <div class="rstat-v" style="color:#4ade80">${(res.ret*100).toFixed(2)}%</div>
+    </div>
+    <div class="rstat">
+      <div class="rstat-l">예상 변동성</div>
+      <div class="rstat-v" style="color:#f87171">${(res.vol*100).toFixed(2)}%</div>
+    </div>
+    <div class="rstat">
+      <div class="rstat-l">샤프지수</div>
+      <div class="rstat-v" style="color:#60a5fa">${res.sharpe.toFixed(3)}</div>
+    </div>
+    <div class="rstat">
+      <div class="rstat-l">MMF 비중</div>
+      <div class="rstat-v" style="color:#9ca3af">${(res.w[MMF_IDX]*100).toFixed(1)}%</div>
+    </div>
+  `;
+
+  // 도넛 + 비중 바
+  const sorted = res.w.map((w,i)=>({i,w})).sort((a,b)=>b.w-a.w);
+  const top5 = sorted.slice(0,5);
+
+  const chartId = 'donut-'+profile;
+  document.getElementById('chart-'+profile).innerHTML = `
+    <div class="donut-wrap">
+      <canvas id="${chartId}"></canvas>
+      <div class="donut-center">
+        <div class="donut-pct">${(res.ret*100).toFixed(1)}%</div>
+        <div class="donut-sub">기대수익</div>
+      </div>
+    </div>
+    <div class="wbars">
+      ${top5.map(({i,w})=>`
+        <div class="wbar-row">
+          <div class="wbar-name" title="${ETFS[i].asset}">${ETFS[i].asset}</div>
+          <div class="wbar-track"><div class="wbar-fill" style="width:${(w*100).toFixed(1)}%;background:${ETFS[i].color}"></div></div>
+          <div class="wbar-pct">${(w*100).toFixed(1)}%</div>
+        </div>`).join('')}
+    </div>
+  `;
+
+  // 도넛 차트 그리기
+  if (donutCharts[profile]) { donutCharts[profile].destroy(); }
+  const ctx = document.getElementById(chartId).getContext('2d');
+  donutCharts[profile] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ETFS.map(e=>e.asset),
+      datasets: [{
+        data: res.w.map(w=>parseFloat((w*100).toFixed(1))),
+        backgroundColor: ETFS.map(e=>e.color),
+        borderColor: '#111318',
+        borderWidth: 2,
+        hoverBorderWidth: 0,
+      }]
+    },
+    options: {
+      responsive:false, cutout:'68%', animation:{duration:700},
+      plugins:{legend:{display:false},tooltip:{
+        callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed.toFixed(1)}%`},
+        backgroundColor:'#1c2030',borderColor:'rgba(255,255,255,0.1)',borderWidth:.5,
+        titleColor:'#8892a4',bodyColor:'#dde1ea',padding:8,
+      }}
+    }
+  });
+}
+
+/* 상세 테이블 */
+function renderDetailTable() {
+  const tbody = document.getElementById('detail-tbody');
+  tbody.innerHTML = ETFS.map((e,i)=>{
+    const wa = optResults.aggressive ? (optResults.aggressive.w[i]*100).toFixed(1)+'%' : '—';
+    const wn = optResults.neutral    ? (optResults.neutral.w[i]*100).toFixed(1)+'%'    : '—';
+    const ws = optResults.stable     ? (optResults.stable.w[i]*100).toFixed(1)+'%'     : '—';
+    const isMMF = i===MMF_IDX;
+    return `<tr>
+      <td><span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${e.color};margin-right:7px;vertical-align:middle;"></span>${e.name}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--mt)">${e.code}</td>
+      <td style="font-family:var(--mono);font-weight:500;color:#f87171;text-align:right">${wa}</td>
+      <td style="font-family:var(--mono);font-weight:500;color:#60a5fa;text-align:right">${wn}</td>
+      <td style="font-family:var(--mono);font-weight:500;color:#4ade80;text-align:right">${ws}</td>
+      <td style="font-size:11px;color:var(--mt)">${isMMF?'💰 MMF (최소 20%)':e.sub}</td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleDetail() {
+  detailOpen = !detailOpen;
+  document.getElementById('detail-table').style.display = detailOpen ? 'table' : 'none';
+  document.getElementById('detail-arrow').textContent = detailOpen ? '▼' : '▶';
 }
 
 /* ════════════════════════════════════════
@@ -337,30 +641,28 @@ async function loadCorr(years) {
   setPg(15); setSt(true,'AI가 상관계수를 계산하는 중...');
   document.getElementById('mwrap').style.display='none';
   document.getElementById('icards').innerHTML='';
-
   let mat = null, isAI = false;
   try {
     setPg(40);
     mat = await tryClaudeCorr(years);
     isAI = true;
   } catch(e) {
-    mat = CORR[years];
+    mat = CORR_DATA[years];
     isAI = false;
   }
   setPg(100); setTimeout(()=>setPg(0),500);
-  apiCache[years] = mat;
-  curMat = mat;
+  apiCache[years] = mat; curMat = mat;
+  // 상관계수 바뀌면 자산배분 재계산
+  optResults = {};
   renderCorr(mat, years, isAI);
 }
 
 async function tryClaudeCorr(years) {
-  const now = new Date();
-  const sy = now.getFullYear()-years;
+  const now = new Date(), sy = now.getFullYear()-years;
   const prompt = `한국 금융시장 전문가로서, 아래 국내 상장 ETF 7개의 ${sy}년~${now.getFullYear()}년 ${years}년간 월별 수익률 기반 피어슨 상관계수 매트릭스를 추정하세요.
 0:KODEX200(KOSPI200) 1:TIGER미국S&P500(환노출) 2:KODEX국채선물10년 3:TIGER미국채10년선물(환노출) 4:ACE KRX금현물(원화) 5:KODEX미국달러선물 6:TIGER CD금리KIS(MMF형)
 MMF는 다른 자산과 거의 무상관. JSON만 출력:
 {"matrix":[[1,r01,r02,r03,r04,r05,r06],[r01,1,r12,r13,r14,r15,r16],[r02,r12,1,r23,r24,r25,r26],[r03,r13,r23,1,r34,r35,r36],[r04,r14,r24,r34,1,r45,r46],[r05,r15,r25,r35,r45,1,r56],[r06,r16,r26,r36,r46,r56,1]]}`;
-
   const res = await fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
@@ -371,7 +673,7 @@ MMF는 다른 자산과 거의 무상관. JSON만 출력:
   const text = d.content.filter(c=>c.type==='text').map(c=>c.text).join('');
   const m = text.match(/\{[\s\S]*?\}/);
   if(!m) throw new Error('no json');
-  const {matrix} = JSON.parse(m[0]);
+  const {matrix}=JSON.parse(m[0]);
   for(let i=0;i<7;i++){matrix[i][i]=1;for(let j=i+1;j<7;j++){const v=Math.round(((matrix[i][j]+matrix[j][i])/2)*100)/100;matrix[i][j]=v;matrix[j][i]=v;}}
   return matrix;
 }
@@ -379,9 +681,7 @@ MMF는 다른 자산과 거의 무상관. JSON만 출력:
 function renderCorr(mat, years, isAI) {
   setSt(false,'');
   curMat = mat;
-  const now = new Date();
-  const sy = now.getFullYear()-years;
-  document.getElementById('pinfo').textContent = PERIOD_LABEL[years] || (sy+'.'+pad(now.getMonth()+1)+' – '+now.getFullYear()+'.'+pad(now.getMonth()+1));
+  document.getElementById('pinfo').textContent = PERIOD_LABEL[years]||'';
   document.getElementById('srcbadge').innerHTML = isAI
     ? '<span class="src-badge ai">✦ AI 실시간 계산</span>'
     : '<span class="src-badge st">✓ 실측 데이터 기반 (Bloomberg · KRX)</span>';
@@ -393,7 +693,7 @@ function renderCorr(mat, years, isAI) {
     h+=`<tr><th class="rth"><span class="rn">${ETFS[i].asset}</span><span class="rs">${ETFS[i].code}</span></th>`;
     for(let j=0;j<N;j++){
       const v=mat[i][j],s=cellColor(v),diag=i===j;
-      h+=`<td class="ctd"><div class="cell ${diag?'diag':''}" style="background:${s.bg};color:${s.tx}" data-i="${i}" data-j="${j}" data-v="${v}">${diag?'—':v.toFixed(2)}</div></td>`;
+      h+=`<td class="ctd"><div class="cell ${diag?'diag':'hov'}" style="background:${s.bg};color:${s.tx}" data-i="${i}" data-j="${j}" data-v="${v}">${diag?'—':v.toFixed(2)}</div></td>`;
     }
     h+='</tr>';
   }
@@ -403,7 +703,7 @@ function renderCorr(mat, years, isAI) {
 
   const tt=document.getElementById('tt');
   function mv(e){tt.style.left=Math.min(e.clientX+15,window.innerWidth-210)+'px';tt.style.top=Math.max(e.clientY-12,8)+'px';}
-  document.querySelectorAll('.cell:not(.diag)').forEach(el=>{
+  document.querySelectorAll('.cell.hov').forEach(el=>{
     el.addEventListener('mouseenter',function(e){
       const i=+this.dataset.i,j=+this.dataset.j,v=+this.dataset.v;
       document.getElementById('ttp').textContent=ETFS[i].name+' × '+ETFS[j].name;
@@ -436,272 +736,10 @@ function setSt(show,msg){
 }
 
 /* ════════════════════════════════════════
-   OPTIMIZER
-════════════════════════════════════════ */
-let optInited = false;
-
-function initOptimizer() {
-  if (optInited) return;
-  optInited = true;
-  buildSliders();
-  buildVolSliders();
-  runOptimizer();
-}
-
-function buildSliders() {
-  document.getElementById('sliders').innerHTML = ETFS.map((e,i) => `
-    <div class="slider-row">
-      <div class="slider-label">
-        <span class="sl-name"><span class="sl-dot" style="background:${e.color}"></span>${e.asset}</span>
-        <span class="sl-val" id="ret-val-${i}">${DEF_RET[i].toFixed(1)}%</span>
-      </div>
-      <input type="range" id="ret-${i}" min="-5" max="25" step="0.5" value="${DEF_RET[i]}"
-        oninput="document.getElementById('ret-val-${i}').textContent=parseFloat(this.value).toFixed(1)+'%'">
-    </div>`).join('');
-}
-
-function buildVolSliders() {
-  document.getElementById('vol-sliders').innerHTML = ETFS.map((e,i) => `
-    <div class="slider-row">
-      <div class="slider-label">
-        <span class="sl-name"><span class="sl-dot" style="background:${e.color}"></span>${e.asset}</span>
-        <span class="sl-val" id="vol-val-${i}">${DEF_VOL[i].toFixed(1)}%</span>
-      </div>
-      <input type="range" id="vol-${i}" min="0.1" max="40" step="0.5" value="${DEF_VOL[i]}"
-        oninput="document.getElementById('vol-val-${i}').textContent=parseFloat(this.value).toFixed(1)+'%'">
-    </div>`).join('');
-}
-
-document.querySelectorAll('.mode-btn').forEach(b=>{
-  b.addEventListener('click',function(){
-    document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('on'));
-    this.classList.add('on');
-    curMode = this.dataset.m;
-  });
-});
-
-/* ── 포트폴리오 계산 ── */
-function getInputs() {
-  const rets = ETFS.map((_,i) => parseFloat(document.getElementById('ret-'+i).value)/100);
-  const vols = ETFS.map((_,i) => parseFloat(document.getElementById('vol-'+i).value)/100);
-  const maxW = parseFloat(document.getElementById('maxw').value)/100;
-  const rf   = parseFloat(document.getElementById('rf').value)/100;
-  return { rets, vols, maxW, rf };
-}
-
-function buildCovMatrix(vols, corr) {
-  const cov = [];
-  for (let i=0;i<N;i++){
-    cov.push([]);
-    for (let j=0;j<N;j++) cov[i].push(vols[i]*vols[j]*corr[i][j]);
-  }
-  return cov;
-}
-
-function portfolioStats(w, rets, cov) {
-  let ret = 0;
-  for (let i=0;i<N;i++) ret += w[i]*rets[i];
-  let var_ = 0;
-  for (let i=0;i<N;i++) for (let j=0;j<N;j++) var_ += w[i]*w[j]*cov[i][j];
-  return { ret, vol: Math.sqrt(Math.max(var_,0)) };
-}
-
-// 몬테카를로 + 경사하강 최적화
-function runOptimizer() {
-  const { rets, vols, maxW, rf } = getInputs();
-  const cov = buildCovMatrix(vols, curMat);
-
-  // 1) 몬테카를로: 랜덤 포트폴리오 4000개
-  const portfolios = [];
-  for (let s=0;s<4000;s++) {
-    const w = randomWeights(N, maxW);
-    const {ret,vol} = portfolioStats(w, rets, cov);
-    const sharpe = vol>0 ? (ret-rf)/vol : 0;
-    portfolios.push({w, ret, vol, sharpe});
-  }
-
-  // 2) 목표별 최적 포트폴리오 탐색 (경사하강 개선)
-  let best;
-  if (curMode==='sharpe')   best = portfolios.reduce((a,b)=>b.sharpe>a.sharpe?b:a);
-  else if (curMode==='minvol') best = portfolios.reduce((a,b)=>b.vol<a.vol?b:a);
-  else best = portfolios.reduce((a,b)=>b.ret>a.ret?b:a);
-
-  // 경사하강으로 정밀 개선 (50회)
-  best = refine(best, rets, cov, vols, maxW, rf, curMode, 50);
-
-  // 효율적 프론티어 추출 (수익률 구간별 최소 변동성)
-  const frontier = buildFrontier(portfolios, rets, cov, vols, maxW, rf);
-
-  drawFrontier(portfolios, frontier, best, rf);
-  showResults(best, rf);
-}
-
-function randomWeights(n, maxW) {
-  let w = Array.from({length:n},()=>Math.random());
-  // 제약: 각 자산 maxW 이하
-  w = w.map(x=>x*maxW);
-  const s = w.reduce((a,b)=>a+b,0);
-  return w.map(x=>x/s);
-}
-
-function refine(p, rets, cov, vols, maxW, rf, mode, iters) {
-  let best = {...p};
-  let step = 0.02;
-  for (let it=0;it<iters;it++) {
-    let improved = false;
-    for (let i=0;i<N;i++) {
-      for (const dir of [1,-1]) {
-        const w2 = [...best.w];
-        w2[i] = Math.min(maxW, Math.max(0, w2[i]+dir*step));
-        // 재정규화
-        const s = w2.reduce((a,b)=>a+b,0);
-        const wn = w2.map(x=>x/s);
-        if (wn[i]>maxW+1e-9) continue;
-        const {ret,vol} = portfolioStats(wn, rets, cov);
-        const sharpe = vol>0?(ret-rf)/vol:0;
-        const better = mode==='sharpe'?sharpe>((best.vol>0?(best.ret-rf)/best.vol:0))
-          :mode==='minvol'?vol<best.vol:ret>best.ret;
-        if (better) { best={w:wn,ret,vol,sharpe}; improved=true; }
-      }
-    }
-    if (!improved) step *= 0.7;
-  }
-  return best;
-}
-
-function buildFrontier(portfolios, rets, cov, vols, maxW, rf) {
-  const retVals = portfolios.map(p=>p.ret);
-  const minRet = Math.min(...retVals), maxRet = Math.max(...retVals);
-  const steps = 40;
-  const frontier = [];
-  for (let k=0;k<=steps;k++) {
-    const targetRet = minRet + (maxRet-minRet)*k/steps;
-    const nearby = portfolios.filter(p=>Math.abs(p.ret-targetRet)<(maxRet-minRet)/steps*1.5);
-    if (nearby.length===0) continue;
-    const best = nearby.reduce((a,b)=>b.vol<a.vol?b:a);
-    frontier.push({ret:best.ret,vol:best.vol});
-  }
-  return frontier;
-}
-
-/* ── 차트 ── */
-function drawFrontier(portfolios, frontier, optimal, rf) {
-  const canvas = document.getElementById('frontierCanvas');
-  const ctx = canvas.getContext('2d');
-
-  // 샘플링 (성능)
-  const sample = portfolios.filter((_,i)=>i%4===0);
-
-  if (frontierChart) { frontierChart.destroy(); frontierChart=null; }
-
-  // 샤프비율로 색상 결정
-  const maxSharpe = Math.max(...portfolios.map(p=>p.sharpe));
-  const minSharpe = Math.min(...portfolios.map(p=>p.sharpe));
-
-  frontierChart = new Chart(ctx, {
-    type: 'scatter',
-    data: {
-      datasets: [
-        {
-          label: '랜덤 포트폴리오',
-          data: sample.map(p=>({x:(p.vol*100).toFixed(2),y:(p.ret*100).toFixed(2)})),
-          pointRadius: 2.5,
-          pointHoverRadius: 4,
-          backgroundColor: sample.map(p=>{
-            const t=(p.sharpe-minSharpe)/(maxSharpe-minSharpe||1);
-            const r=Math.round(79+t*(34-79)), g=Math.round(142+t*(197-142)), b=Math.round(247+t*(94-247));
-            return `rgba(${r},${g},${b},0.45)`;
-          }),
-          borderColor: 'transparent',
-        },
-        {
-          label: '효율적 프론티어',
-          data: frontier.map(p=>({x:(p.vol*100).toFixed(2),y:(p.ret*100).toFixed(2)})),
-          type: 'line',
-          pointRadius: 0,
-          borderColor: '#22c55e',
-          borderWidth: 2,
-          tension: 0.4,
-          fill: false,
-          order: 1,
-        },
-        {
-          label: '최적 포트폴리오',
-          data: [{x:(optimal.vol*100).toFixed(2),y:(optimal.ret*100).toFixed(2)}],
-          pointRadius: 10,
-          pointHoverRadius: 13,
-          pointStyle: 'star',
-          backgroundColor: '#f59e0b',
-          borderColor: '#fff',
-          borderWidth: 1.5,
-          order: 0,
-        },
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 600 },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              if (ctx.datasetIndex===2) return `★ 최적: 수익률 ${ctx.parsed.y}% / 변동성 ${ctx.parsed.x}%`;
-              if (ctx.datasetIndex===1) return `프론티어: 수익률 ${ctx.parsed.y}% / 변동성 ${ctx.parsed.x}%`;
-              return `수익률 ${ctx.parsed.y}% / 변동성 ${ctx.parsed.x}%`;
-            }
-          },
-          backgroundColor:'#1c2030',borderColor:'rgba(255,255,255,0.12)',borderWidth:.5,
-          titleColor:'#8892a4',bodyColor:'#dde1ea',padding:10,
-        }
-      },
-      scales: {
-        x: {
-          title:{display:true,text:'연간 변동성 (%)',color:'#8892a4',font:{size:11,family:'DM Mono'}},
-          ticks:{color:'#6b7280',font:{size:10,family:'DM Mono'}},
-          grid:{color:'rgba(255,255,255,0.04)'},
-        },
-        y: {
-          title:{display:true,text:'연간 기대수익률 (%)',color:'#8892a4',font:{size:11,family:'DM Mono'}},
-          ticks:{color:'#6b7280',font:{size:10,family:'DM Mono'}},
-          grid:{color:'rgba(255,255,255,0.04)'},
-        }
-      }
-    }
-  });
-
-  // 높이 고정
-  canvas.style.height = '360px';
-}
-
-function showResults(opt, rf) {
-  const { ret, vol, sharpe } = opt;
-  const modeLabel = curMode==='sharpe'?'최대 샤프지수':curMode==='minvol'?'최소 변동성':'최대 수익률';
-  document.getElementById('result-grid').style.display='grid';
-  document.getElementById('result-grid').innerHTML=`
-    <div class="rc"><div class="rcl">최적화 목표</div><div class="rcv" style="font-size:13px;color:#a78bfa">${modeLabel}</div></div>
-    <div class="rc"><div class="rcl">기대수익률</div><div class="rcv" style="color:#4ade80">${(ret*100).toFixed(2)}%</div><div class="rcs">연간</div></div>
-    <div class="rc"><div class="rcl">예상 변동성</div><div class="rcv" style="color:#f87171">${(vol*100).toFixed(2)}%</div><div class="rcs">연간 표준편차</div></div>
-    <div class="rc"><div class="rcl">샤프 지수</div><div class="rcv" style="color:#60a5fa">${vol>0?((ret-rf)/vol).toFixed(3):'—'}</div><div class="rcs">무위험 ${(rf*100).toFixed(1)}% 기준</div></div>
-  `;
-
-  // 비중 바
-  document.getElementById('weight-section').style.display='block';
-  const sorted = opt.w.map((w,i)=>({i,w})).sort((a,b)=>b.w-a.w);
-  document.getElementById('weight-bars').innerHTML = sorted.map(({i,w})=>`
-    <div class="wbar-row">
-      <div class="wbar-label"><span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${ETFS[i].color};margin-right:6px;vertical-align:middle;"></span>${ETFS[i].asset}</div>
-      <div class="wbar-track"><div class="wbar-fill" style="width:${(w*100).toFixed(1)}%;background:${ETFS[i].color};"></div></div>
-      <div class="wbar-pct">${(w*100).toFixed(1)}%</div>
-    </div>`).join('');
-}
-
-/* ════════════════════════════════════════
    INIT
 ════════════════════════════════════════ */
 // ETF 카드
-document.getElementById('etfgrid').innerHTML = ETFS.map(e=>`
+document.getElementById('etfgrid').innerHTML=ETFS.map(e=>`
   <div class="etf-card">
     <div class="etf-dot" style="background:${e.color}"></div>
     <div><div class="etf-name">${e.name}</div><div class="etf-meta">${e.code} · ${e.sub}</div></div>
@@ -716,7 +754,9 @@ document.querySelectorAll('.pbtn[data-p]').forEach(btn=>{
   });
 });
 
+// Chart.js 로드 후 시작
 loadCorr(5);
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </body>
 </html>
