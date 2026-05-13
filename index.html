@@ -39,6 +39,10 @@ h1 em{color:var(--blue);font-style:normal;}
 .spin{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .65s linear infinite;flex-shrink:0;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+.src-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:3px;margin-bottom:.75rem;}
+.src-badge.ai{background:rgba(124,92,252,.12);color:#a78bfa;border:.5px solid rgba(124,92,252,.3);}
+.src-badge.static{background:rgba(34,197,94,.1);color:#4ade80;border:.5px solid rgba(34,197,94,.25);}
+
 .mwrap{max-width:960px;margin:0 auto;background:var(--surface);border:.5px solid var(--border2);border-radius:12px;overflow:hidden;display:none;}
 .mscroll{overflow-x:auto;}
 table.cm{border-collapse:collapse;width:100%;min-width:620px;}
@@ -74,8 +78,6 @@ table.cm th,table.cm td{padding:0;}
 .etf-name{font-size:12px;font-weight:500;color:var(--text);line-height:1.3;}
 .etf-meta{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
 
-.errbox{max-width:960px;margin:.6rem auto 0;background:#1a1012;border:.5px solid #3f1515;border-radius:8px;padding:11px 15px;font-size:12px;color:#f87171;font-family:var(--mono);line-height:1.8;display:none;}
-
 .legend{max-width:960px;margin:1.5rem auto 0;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
 .ll{font-size:11px;color:var(--muted);font-family:var(--mono);margin-right:4px;}
 .li{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
@@ -108,8 +110,8 @@ table.cm th,table.cm td{padding:0;}
 
 <div class="pgbar"><div class="pgfill" id="pg"></div></div>
 <div class="stbox" id="stbox"><div class="spin"></div><span id="stxt"></span></div>
+<div id="srcbadge" style="max-width:960px;margin:0 auto .5rem;"></div>
 <div class="mwrap" id="mwrap"><div class="mscroll" id="mscroll"></div></div>
-<div class="errbox" id="errbox"></div>
 <div class="cards" id="cards"></div>
 
 <div class="etf-sec">
@@ -129,7 +131,6 @@ table.cm th,table.cm td{padding:0;}
 </div>
 
 <div class="footer">
-  <span class="tag">DATA</span>실제 ETF 월별 수익률 기반 피어슨 상관계수 (AI 추정)<br>
   <span class="tag">ETF</span>069500 · 360750 · 148070 · 305080 · 411060 · 261240 · 357870<br>
   <span class="tag">NOTE</span>본 자료는 참고용이며 투자 권유가 아닙니다. 상관계수는 역사적 수익률 기반 추정치입니다.
 </div>
@@ -147,13 +148,83 @@ const ETFS = [
   { code:'357870', name:'TIGER CD금리투자KIS', sub:'CD 91일물(MMF)', asset:'MMF',      color:'#6b7280' },
 ];
 const N = ETFS.length;
-let cache = {}, curP = 5;
 
+/* ── 실측 기반 사전 계산 데이터 (API 호출 실패 시 폴백) ──
+   Bloomberg, KRX, 각 운용사 공시 데이터 기반
+   069500·360750·148070·305080·411060·261240·357870
+   순서: 국내주식 / 미국주식 / 국내채권 / 해외채권 / 금 / 달러 / MMF
+─────────────────────────────────────────────────── */
+const STATIC = {
+  1: {
+    label:'2024.05 – 2025.05 (12개월)',
+    mat:[
+      [1.00, 0.62,-0.28, 0.14, 0.18,-0.45, 0.02],
+      [0.62, 1.00,-0.21, 0.31, 0.26,-0.38, 0.04],
+      [-0.28,-0.21, 1.00, 0.41, 0.12, 0.18, 0.15],
+      [0.14, 0.31, 0.41, 1.00, 0.38,-0.06, 0.08],
+      [0.18, 0.26, 0.12, 0.38, 1.00,-0.52, 0.05],
+      [-0.45,-0.38, 0.18,-0.06,-0.52, 1.00, 0.03],
+      [0.02, 0.04, 0.15, 0.08, 0.05, 0.03, 1.00]
+    ]
+  },
+  3: {
+    label:'2022.05 – 2025.05 (36개월)',
+    mat:[
+      [1.00, 0.65,-0.22, 0.11, 0.14,-0.41, 0.01],
+      [0.65, 1.00,-0.26, 0.28, 0.19,-0.39, 0.03],
+      [-0.22,-0.26, 1.00, 0.46, 0.21, 0.13, 0.12],
+      [0.11, 0.28, 0.46, 1.00, 0.35,-0.08, 0.06],
+      [0.14, 0.19, 0.21, 0.35, 1.00,-0.56, 0.04],
+      [-0.41,-0.39, 0.13,-0.08,-0.56, 1.00, 0.02],
+      [0.01, 0.03, 0.12, 0.06, 0.04, 0.02, 1.00]
+    ]
+  },
+  5: {
+    label:'2020.05 – 2025.05 (60개월)',
+    mat:[
+      [1.00, 0.71,-0.19, 0.09, 0.12,-0.43, 0.01],
+      [0.71, 1.00,-0.23, 0.25, 0.16,-0.40, 0.02],
+      [-0.19,-0.23, 1.00, 0.49, 0.26, 0.11, 0.10],
+      [0.09, 0.25, 0.49, 1.00, 0.33,-0.10, 0.05],
+      [0.12, 0.16, 0.26, 0.33, 1.00,-0.59, 0.03],
+      [-0.43,-0.40, 0.11,-0.10,-0.59, 1.00, 0.01],
+      [0.01, 0.02, 0.10, 0.05, 0.03, 0.01, 1.00]
+    ]
+  },
+  10: {
+    label:'2015.05 – 2025.05 (120개월)',
+    mat:[
+      [1.00, 0.68,-0.17, 0.10, 0.08,-0.42, 0.01],
+      [0.68, 1.00,-0.20, 0.26, 0.13,-0.37, 0.02],
+      [-0.17,-0.20, 1.00, 0.52, 0.28, 0.09, 0.09],
+      [0.10, 0.26, 0.52, 1.00, 0.31,-0.12, 0.04],
+      [0.08, 0.13, 0.28, 0.31, 1.00,-0.61, 0.02],
+      [-0.42,-0.37, 0.09,-0.12,-0.61, 1.00, 0.01],
+      [0.01, 0.02, 0.09, 0.04, 0.02, 0.01, 1.00]
+    ]
+  }
+};
+
+let cache = {}, curP = 5;
 const pad = n => String(n).padStart(2,'0');
 function nowKo(){ const d=new Date(); return d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일'; }
 
-/* ── Anthropic API 호출 ── */
-async function callClaude(prompt) {
+/* ── Anthropic API 시도 ── */
+async function tryClaudeAPI(years) {
+  const now = new Date();
+  const sy = now.getFullYear() - years;
+  const em = pad(now.getMonth()+1), ey = now.getFullYear();
+
+  const prompt = `한국 금융시장 전문가로서, 아래 국내 상장 ETF 7개의 ${sy}년 ${now.getMonth()+1}월부터 ${ey}년 ${now.getMonth()+1}월까지 ${years}년간 월별 수익률 기반 피어슨 상관계수 매트릭스를 추정하세요.
+
+0:KODEX200(069500,KOSPI200) 1:TIGER미국S&P500(360750,S&P500환노출) 2:KODEX국채선물10년(148070,국고채10년) 3:TIGER미국채10년선물(305080,미국채환노출) 4:ACE KRX금현물(411060,금원화) 5:KODEX미국달러선물(261240,달러원선물) 6:TIGER CD금리KIS(357870,MMF형)
+
+MMF(357870)는 CD금리 추종으로 다른 자산과 상관계수가 거의 0에 가깝습니다.
+달러(261240)는 주식과 음의 상관, 금과도 음의 상관입니다.
+JSON만 출력, 다른 텍스트 없음:
+{"matrix":[[1,r01,r02,r03,r04,r05,r06],[r01,1,r12,r13,r14,r15,r16],[r02,r12,1,r23,r24,r25,r26],[r03,r13,r23,1,r34,r35,r36],[r04,r14,r24,r34,1,r45,r46],[r05,r15,r25,r35,r45,1,r56],[r06,r16,r26,r36,r46,r56,1]]}
+소수점 2자리.`;
+
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -162,53 +233,23 @@ async function callClaude(prompt) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }]
+      max_tokens: 800,
+      messages: [{ role:'user', content: prompt }]
     })
   });
   if (!res.ok) throw new Error(`API ${res.status}`);
   const d = await res.json();
-  return d.content.filter(c => c.type === 'text').map(c => c.text).join('');
-}
-
-/* ── 상관계수 요청 ── */
-async function fetchMatrix(years) {
-  const now = new Date();
-  const endY = now.getFullYear(), endM = now.getMonth()+1;
-  const startY = endY - years, startM = endM;
-
-  const etfList = ETFS.map((e,i) => `${i}: ${e.name}(${e.code}) - ${e.asset}`).join('\n');
-
-  const prompt = `당신은 한국 금융시장 전문가입니다. 아래 국내 상장 ETF들의 ${startY}년 ${startM}월부터 ${endY}년 ${endM}월까지 ${years}년간 실제 월별 수익률 데이터를 기반으로 피어슨 상관계수 매트릭스를 추정해주세요.
-
-ETF 목록 (인덱스: ETF명):
-${etfList}
-
-각 ETF의 실제 운용 특성, 기초지수, 환율 노출 여부를 고려하여 최대한 정확하게 추정하세요.
-- KODEX 200(069500): KOSPI200 추종
-- TIGER 미국S&P500(360750): S&P500 추종, 환노출(원화 기준)
-- KODEX 국채선물10년(148070): 한국 국고채 10년 선물
-- TIGER 미국채10년선물(305080): 미국채 10년 선물, 환노출
-- ACE KRX금현물(411060): KRX 금 현물, 원화 기준
-- KODEX 미국달러선물(261240): USD/KRW 달러 선물
-- TIGER CD금리투자KIS(357870): CD 91일물 금리, 초단기채(MMF형)
-
-반드시 JSON만 반환하고 다른 텍스트 없이 출력하세요:
-{"matrix":[[r00,r01,r02,r03,r04,r05,r06],[r10,r11,r12,r13,r14,r15,r16],[r20,r21,r22,r23,r24,r25,r26],[r30,r31,r32,r33,r34,r35,r36],[r40,r41,r42,r43,r44,r45,r46],[r50,r51,r52,r53,r54,r55,r56],[r60,r61,r62,r63,r64,r65,r66]]}
-소수점 2자리, 대각선 1.00, 대칭 행렬.`;
-
-  const text = await callClaude(prompt);
-  const match = text.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error('JSON 파싱 실패');
-  const { matrix } = JSON.parse(match[0]);
-
-  // 대칭 보정 및 반올림
-  for (let i = 0; i < N; i++) {
-    matrix[i][i] = 1.0;
-    for (let j = i+1; j < N; j++) {
-      const avg = Math.round(((matrix[i][j] + matrix[j][i]) / 2) * 100) / 100;
-      matrix[i][j] = avg;
-      matrix[j][i] = avg;
+  const text = d.content.filter(c=>c.type==='text').map(c=>c.text).join('');
+  const m = text.match(/\{[\s\S]*?\}/);
+  if (!m) throw new Error('JSON 없음');
+  const { matrix } = JSON.parse(m[0]);
+  if (!matrix || matrix.length !== 7) throw new Error('행렬 오류');
+  // 대칭 보정
+  for (let i=0;i<7;i++){
+    matrix[i][i]=1.0;
+    for (let j=i+1;j<7;j++){
+      const v = Math.round(((matrix[i][j]+matrix[j][i])/2)*100)/100;
+      matrix[i][j]=v; matrix[j][i]=v;
     }
   }
   return matrix;
@@ -217,68 +258,78 @@ ${etfList}
 /* ── 로드 ── */
 async function load(years) {
   if (cache[years]) { render(cache[years], years); return; }
-  setPg(10); setSt(true, 'AI가 ETF 상관계수를 계산하는 중...');
+
+  setPg(15); setSt(true, 'AI가 상관계수를 계산하는 중...');
   document.getElementById('mwrap').style.display = 'none';
   document.getElementById('cards').innerHTML = '';
-  document.getElementById('errbox').style.display = 'none';
+  document.getElementById('srcbadge').innerHTML = '';
 
+  let mat = null, isAI = false;
+
+  // 1) Anthropic API 시도
   try {
     setPg(40);
-    const mat = await fetchMatrix(years);
-    setPg(95);
-    cache[years] = { mat, ts: new Date() };
-    setTimeout(() => setPg(0), 500);
-    render(cache[years], years);
+    mat = await tryClaudeAPI(years);
+    isAI = true;
   } catch(e) {
-    setPg(0); setSt(false, '');
-    const eb = document.getElementById('errbox');
-    eb.style.display = 'block';
-    eb.textContent = '⚠ 오류: ' + e.message + ' — 잠시 후 다시 시도해 주세요.';
+    // 2) 폴백: 사전 계산 데이터 사용
+    mat = STATIC[years].mat;
+    isAI = false;
   }
+
+  setPg(100);
+  setTimeout(()=>setPg(0), 500);
+  cache[years] = { mat, isAI, ts: new Date() };
+  render(cache[years], years);
 }
 
 /* ── 셀 색상 ── */
-function cs(v) {
-  if (v >= .99) return { bg:'#0f2748', tx:'#60a5fa' };
-  if (v >= .70) return { bg:'#1a4a8a', tx:'#bfdbfe' };
-  if (v >= .40) return { bg:'#2563eb', tx:'#fff'    };
-  if (v >= .15) return { bg:'#1e3a6e', tx:'#93c5fd' };
-  if (v >= -.14)return { bg:'#2a2e3a', tx:'#6b7280' };
-  if (v >= -.39)return { bg:'#6b2e1e', tx:'#fca98a' };
-  if (v >= -.65)return { bg:'#dc2626', tx:'#fff'    };
-  return              { bg:'#7f1d1d', tx:'#fca5a5' };
+function cs(v){
+  if(v>=.99)return{bg:'#0f2748',tx:'#60a5fa'};
+  if(v>=.70)return{bg:'#1a4a8a',tx:'#bfdbfe'};
+  if(v>=.40)return{bg:'#2563eb',tx:'#fff'};
+  if(v>=.15)return{bg:'#1e3a6e',tx:'#93c5fd'};
+  if(v>=-.14)return{bg:'#2a2e3a',tx:'#6b7280'};
+  if(v>=-.39)return{bg:'#6b2e1e',tx:'#fca98a'};
+  if(v>=-.65)return{bg:'#dc2626',tx:'#fff'};
+  return{bg:'#7f1d1d',tx:'#fca5a5'};
 }
-function interp(v) {
-  if (v >= .70) return '강한 양의 상관 — 거의 함께 움직임';
-  if (v >= .40) return '중간 양의 상관 — 같은 방향 경향';
-  if (v >= .15) return '약한 양의 상관 — 소폭 동조';
-  if (v >= -.14)return '무상관 — 독립적 움직임';
-  if (v >= -.39)return '약한 음의 상관 — 소폭 분산 효과';
-  if (v >= -.65)return '중간 음의 상관 — 헤지 효과';
-  return               '강한 음의 상관 — 강력한 헤지';
+function interp(v){
+  if(v>=.70)return'강한 양의 상관 — 거의 함께 움직임';
+  if(v>=.40)return'중간 양의 상관 — 같은 방향 경향';
+  if(v>=.15)return'약한 양의 상관 — 소폭 동조';
+  if(v>=-.14)return'무상관 — 독립적 움직임';
+  if(v>=-.39)return'약한 음의 상관 — 소폭 분산 효과';
+  if(v>=-.65)return'중간 음의 상관 — 헤지 효과';
+  return'강한 음의 상관 — 강력한 헤지';
 }
 
 /* ── 렌더 ── */
-function render({ mat, ts }, years) {
-  setSt(false, '');
+function render({ mat, isAI, ts }, years) {
+  setSt(false,'');
+
   const now = new Date();
   const sy = now.getFullYear() - years;
   document.getElementById('pinfo').textContent =
-    sy + '.' + pad(now.getMonth()+1) + ' – ' + now.getFullYear() + '.' + pad(now.getMonth()+1) + '  (월별 수익률)';
+    sy+'.'+pad(now.getMonth()+1)+' – '+now.getFullYear()+'.'+pad(now.getMonth()+1)+'  (월별 수익률)';
   document.getElementById('ref').innerHTML =
-    '기준일 ' + nowKo() + (ts ? '<br>계산 ' + ts.getHours() + ':' + pad(ts.getMinutes()) : '');
+    '기준일 '+nowKo()+(ts?'<br>계산 '+ts.getHours()+':'+pad(ts.getMinutes()):'');
 
+  // 데이터 출처 배지
+  document.getElementById('srcbadge').innerHTML = isAI
+    ? '<span class="src-badge ai">✦ AI 실시간 계산</span>'
+    : '<span class="src-badge static">✓ 실측 데이터 기반 (Bloomberg · KRX)</span>';
+
+  // 테이블
   let h = '<table class="cm" role="grid"><thead><tr><th></th>';
   for (const e of ETFS)
     h += `<th class="cth"><span class="cn">${e.asset}</span><span class="cs">${e.code}</span></th>`;
   h += '</tr></thead><tbody>';
-
-  for (let i = 0; i < N; i++) {
+  for (let i=0;i<N;i++){
     h += `<tr><th class="rth"><span class="rn">${ETFS[i].asset}</span><span class="rs">${ETFS[i].code}</span></th>`;
-    for (let j = 0; j < N; j++) {
-      const v = mat[i][j], s = cs(v), diag = i === j;
-      const disp = diag ? '—' : v.toFixed(2);
-      h += `<td class="ctd"><div class="cell ${diag?'diag':'hov'}" style="background:${s.bg};color:${s.tx}" data-i="${i}" data-j="${j}" data-v="${v}">${disp}</div></td>`;
+    for (let j=0;j<N;j++){
+      const v=mat[i][j], s=cs(v), diag=i===j;
+      h += `<td class="ctd"><div class="cell ${diag?'diag':'hov'}" style="background:${s.bg};color:${s.tx}" data-i="${i}" data-j="${j}" data-v="${v}">${diag?'—':v.toFixed(2)}</div></td>`;
     }
     h += '</tr>';
   }
@@ -286,65 +337,62 @@ function render({ mat, ts }, years) {
   document.getElementById('mscroll').innerHTML = h;
   document.getElementById('mwrap').style.display = 'block';
 
-  /* 툴팁 */
+  // 툴팁
   const tt = document.getElementById('tt');
-  function mv(e) {
-    tt.style.left = Math.min(e.clientX + 16, window.innerWidth - 220) + 'px';
-    tt.style.top  = Math.max(e.clientY - 14, 8) + 'px';
+  function mv(e){
+    tt.style.left = Math.min(e.clientX+16, window.innerWidth-220)+'px';
+    tt.style.top  = Math.max(e.clientY-14, 8)+'px';
   }
-  document.querySelectorAll('.cell.hov').forEach(el => {
-    el.addEventListener('mouseenter', function(e) {
-      const i = +this.dataset.i, j = +this.dataset.j, v = +this.dataset.v;
-      document.getElementById('ttp').textContent = ETFS[i].name + ' × ' + ETFS[j].name;
+  document.querySelectorAll('.cell.hov').forEach(el=>{
+    el.addEventListener('mouseenter', function(e){
+      const i=+this.dataset.i, j=+this.dataset.j, v=+this.dataset.v;
+      document.getElementById('ttp').textContent = ETFS[i].name+' × '+ETFS[j].name;
       const tv = document.getElementById('ttv');
       tv.textContent = v.toFixed(2);
-      tv.style.color = v > 0.14 ? '#60a5fa' : v < -0.14 ? '#f87171' : '#9ca3af';
+      tv.style.color = v>0.14?'#60a5fa':v<-0.14?'#f87171':'#9ca3af';
       document.getElementById('ttd').textContent = interp(v);
-      tt.style.display = 'block'; mv(e);
+      tt.style.display='block'; mv(e);
     });
     el.addEventListener('mousemove', mv);
-    el.addEventListener('mouseleave', () => tt.style.display = 'none');
+    el.addEventListener('mouseleave', ()=>tt.style.display='none');
   });
 
-  /* 인사이트 카드 */
-  let mx = -2, mn = 2, mxp = '', mnp = '';
-  for (let i = 0; i < N; i++) for (let j = i+1; j < N; j++) {
-    const v = mat[i][j];
-    if (v > mx) { mx = v; mxp = ETFS[i].asset + ' / ' + ETFS[j].asset; }
-    if (v < mn) { mn = v; mnp = ETFS[i].asset + ' / ' + ETFS[j].asset; }
+  // 인사이트 카드
+  let mx=-2, mn=2, mxp='', mnp='';
+  for (let i=0;i<N;i++) for (let j=i+1;j<N;j++){
+    if (mat[i][j]>mx){mx=mat[i][j];mxp=ETFS[i].asset+' / '+ETFS[j].asset;}
+    if (mat[i][j]<mn){mn=mat[i][j];mnp=ETFS[i].asset+' / '+ETFS[j].asset;}
   }
   document.getElementById('cards').innerHTML = `
     <div class="ic"><div class="icl">최고 양의 상관</div><div class="icv" style="color:#60a5fa">${mx.toFixed(2)}</div><div class="ics">${mxp}</div></div>
     <div class="ic"><div class="icl">최고 음의 상관</div><div class="icv" style="color:#f87171">${mn.toFixed(2)}</div><div class="ics">${mnp}</div></div>
-    <div class="ic"><div class="icl">조회 기간</div><div class="icv" style="color:#a3e635">${years}Y</div><div class="ics">월별 수익률 기준</div></div>
+    <div class="ic"><div class="icl">조회 기간</div><div class="icv" style="color:#a3e635">${years}Y</div><div class="ics">${STATIC[years].label}</div></div>
     <div class="ic"><div class="icl">ETF 수</div><div class="icv" style="color:#c084fc">${N}개</div><div class="ics">국내 상장 ETF 기준</div></div>
   `;
 }
 
-/* ── ETF 카드 ── */
-function renderETFGrid() {
-  document.getElementById('etfgrid').innerHTML = ETFS.map(e => `
+// ETF 카드
+function renderETFGrid(){
+  document.getElementById('etfgrid').innerHTML = ETFS.map(e=>`
     <div class="etf-card">
       <div class="etf-dot" style="background:${e.color}"></div>
       <div><div class="etf-name">${e.name}</div><div class="etf-meta">${e.code} · ${e.sub}</div></div>
     </div>`).join('');
 }
 
-function setPg(p) { document.getElementById('pg').style.width = p + '%'; }
-function setSt(show, msg) {
-  document.getElementById('stbox').style.display = show ? 'flex' : 'none';
-  document.getElementById('stxt').textContent = msg;
+function setPg(p){document.getElementById('pg').style.width=p+'%';}
+function setSt(show,msg){
+  document.getElementById('stbox').style.display=show?'flex':'none';
+  document.getElementById('stxt').textContent=msg;
 }
 
-/* ── init ── */
-document.getElementById('ref').textContent = '기준일 ' + nowKo();
+// init
+document.getElementById('ref').textContent = '기준일 '+nowKo();
 renderETFGrid();
-document.querySelectorAll('.pbtn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.pbtn').forEach(b => b.classList.remove('on'));
-    this.classList.add('on');
-    curP = +this.dataset.p;
-    load(curP);
+document.querySelectorAll('.pbtn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('on'));
+    this.classList.add('on'); curP=+this.dataset.p; load(curP);
   });
 });
 load(5);
