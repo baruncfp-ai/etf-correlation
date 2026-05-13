@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>국내 상장 ETF 상관계수 매트릭스</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f14;--surface:#13161e;--surface2:#1c2030;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  --text:#e8eaf0;--muted:#6b7280;--hint:#374151;
+  --blue:#4f8ef7;--blue2:#7c5cfc;--green:#22c55e;
+  --mono:'DM Mono',monospace;--sans:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;padding:2rem 1.25rem 4rem;}
+
+.hd{max-width:960px;margin:0 auto 1.75rem;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:.75rem;border-bottom:.5px solid var(--border2);padding-bottom:1.25rem;}
+.brand-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.ldot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.brand{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+h1{font-size:clamp(16px,2.8vw,22px);font-weight:600;letter-spacing:-.02em;line-height:1.3;}
+h1 em{color:var(--blue);font-style:normal;}
+.ref{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right;line-height:1.8;}
+
+.ctrl{max-width:960px;margin:0 auto 1.25rem;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.ctrl-lbl{font-size:11px;color:var(--muted);font-family:var(--mono);margin-right:4px;}
+.pbtn{font-family:var(--mono);font-size:12px;padding:5px 16px;border-radius:4px;border:.5px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+.pbtn:hover{border-color:var(--blue);color:var(--blue);}
+.pbtn.on{background:rgba(79,142,247,.15);border-color:var(--blue);color:var(--blue);font-weight:500;}
+.pinfo{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+.pgbar{height:2px;background:var(--border);border-radius:2px;overflow:hidden;max-width:960px;margin:0 auto .6rem;}
+.pgfill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue2));width:0%;transition:width .4s;}
+
+.stbox{max-width:960px;margin:0 auto .5rem;display:none;align-items:center;gap:9px;font-size:12px;color:var(--muted);padding:.4rem 0;}
+.spin{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .65s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.mwrap{max-width:960px;margin:0 auto;background:var(--surface);border:.5px solid var(--border2);border-radius:12px;overflow:hidden;display:none;}
+.mscroll{overflow-x:auto;}
+table.cm{border-collapse:collapse;width:100%;min-width:620px;}
+table.cm th,table.cm td{padding:0;}
+.cth{padding:14px 3px 10px;text-align:center;}
+.cn{font-size:11px;font-weight:500;color:var(--text);display:block;line-height:1.3;}
+.cs{font-size:10px;color:var(--muted);font-family:var(--mono);display:block;margin-top:1px;}
+.rth{padding:5px 12px 5px 16px;text-align:right;min-width:90px;}
+.rn{font-size:11px;font-weight:500;color:var(--text);display:block;white-space:nowrap;}
+.rs{font-size:10px;color:var(--muted);font-family:var(--mono);display:block;margin-top:1px;}
+.ctd{padding:3px;}
+.cell{width:72px;height:50px;display:flex;align-items:center;justify-content:center;border-radius:5px;font-family:var(--mono);font-size:12.5px;font-weight:500;transition:transform .12s;}
+.cell.hov{cursor:pointer;}
+.cell.hov:hover{transform:scale(1.08);z-index:2;position:relative;}
+.cell.diag{cursor:default;}
+
+#tt{position:fixed;background:var(--surface2);border:.5px solid var(--border2);border-radius:9px;padding:11px 15px;font-size:12px;color:var(--text);pointer-events:none;z-index:200;display:none;min-width:210px;line-height:1.7;box-shadow:0 10px 40px rgba(0,0,0,.65);}
+.ttp{font-family:var(--mono);font-size:10px;color:var(--muted);}
+.ttv{font-size:23px;font-weight:500;font-family:var(--mono);margin:2px 0 3px;}
+.ttd{font-size:11px;color:var(--muted);}
+
+.cards{max-width:960px;margin:1.25rem auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px;}
+.ic{background:var(--surface);border:.5px solid var(--border);border-radius:8px;padding:11px 14px;}
+.icl{font-size:10px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+.icv{font-size:18px;font-weight:600;font-family:var(--mono);}
+.ics{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4;}
+
+.etf-sec{max-width:960px;margin:1.75rem auto 0;}
+.etf-ttl{font-size:11px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem;}
+.etf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:8px;}
+.etf-card{background:var(--surface);border:.5px solid var(--border);border-radius:7px;padding:9px 12px;display:flex;align-items:center;gap:10px;}
+.etf-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.etf-name{font-size:12px;font-weight:500;color:var(--text);line-height:1.3;}
+.etf-meta{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+
+.errbox{max-width:960px;margin:.6rem auto 0;background:#1a1012;border:.5px solid #3f1515;border-radius:8px;padding:11px 15px;font-size:12px;color:#f87171;font-family:var(--mono);line-height:1.8;display:none;}
+
+.legend{max-width:960px;margin:1.5rem auto 0;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.ll{font-size:11px;color:var(--muted);font-family:var(--mono);margin-right:4px;}
+.li{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
+.ls{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+.footer{max-width:960px;margin:2rem auto 0;font-size:11px;color:var(--muted);font-family:var(--mono);line-height:2;border-top:.5px solid var(--border);padding-top:1.25rem;}
+.tag{display:inline-block;background:rgba(79,142,247,.1);color:var(--blue);border:.5px solid rgba(79,142,247,.22);border-radius:3px;padding:1px 7px;font-size:10px;margin-right:4px;}
+
+@media(max-width:580px){.cell{width:58px;height:44px;font-size:11px;}.rth{min-width:68px;padding:4px 8px 4px 10px;}}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div>
+    <div class="brand-row"><div class="ldot"></div><span class="brand">Korean ETF · Correlation Matrix</span></div>
+    <h1>국내 상장 ETF <em>상관계수</em> 매트릭스</h1>
+  </div>
+  <div class="ref" id="ref"></div>
+</div>
+
+<div class="ctrl">
+  <span class="ctrl-lbl">조회 기간</span>
+  <button class="pbtn" data-p="1">1Y</button>
+  <button class="pbtn" data-p="3">3Y</button>
+  <button class="pbtn on" data-p="5">5Y</button>
+  <button class="pbtn" data-p="10">10Y</button>
+  <span class="pinfo" id="pinfo"></span>
+</div>
+
+<div class="pgbar"><div class="pgfill" id="pg"></div></div>
+<div class="stbox" id="stbox"><div class="spin"></div><span id="stxt"></span></div>
+<div class="mwrap" id="mwrap"><div class="mscroll" id="mscroll"></div></div>
+<div class="errbox" id="errbox"></div>
+<div class="cards" id="cards"></div>
+
+<div class="etf-sec">
+  <div class="etf-ttl">참고 ETF 목록</div>
+  <div class="etf-grid" id="etfgrid"></div>
+</div>
+
+<div class="legend">
+  <span class="ll">상관계수</span>
+  <div class="li"><div class="ls" style="background:#1a4a8a"></div>강한 양 ≥0.7</div>
+  <div class="li"><div class="ls" style="background:#2563eb"></div>중간 양 0.4~0.7</div>
+  <div class="li"><div class="ls" style="background:#1e3a6e"></div>약한 양 0.15~0.4</div>
+  <div class="li"><div class="ls" style="background:#2a2e3a"></div>무상관</div>
+  <div class="li"><div class="ls" style="background:#6b2e1e"></div>약한 음</div>
+  <div class="li"><div class="ls" style="background:#dc2626"></div>중간 음</div>
+  <div class="li"><div class="ls" style="background:#7f1d1d"></div>강한 음 ≤−0.65</div>
+</div>
+
+<div class="footer">
+  <span class="tag">DATA</span>실제 ETF 월별 수익률 기반 피어슨 상관계수 (AI 추정)<br>
+  <span class="tag">ETF</span>069500 · 360750 · 148070 · 305080 · 411060 · 261240 · 357870<br>
+  <span class="tag">NOTE</span>본 자료는 참고용이며 투자 권유가 아닙니다. 상관계수는 역사적 수익률 기반 추정치입니다.
+</div>
+
+<div id="tt"><div class="ttp" id="ttp"></div><div class="ttv" id="ttv"></div><div class="ttd" id="ttd"></div></div>
+
+<script>
+const ETFS = [
+  { code:'069500', name:'KODEX 200',           sub:'KOSPI200',       asset:'국내주식', color:'#3b82f6' },
+  { code:'360750', name:'TIGER 미국S&P500',    sub:'S&P500(환노출)', asset:'미국주식', color:'#8b5cf6' },
+  { code:'148070', name:'KODEX 국채선물10년',  sub:'국고채 10년물',  asset:'국내채권', color:'#10b981' },
+  { code:'305080', name:'TIGER 미국채10년선물',sub:'미국채 10년',    asset:'해외채권', color:'#06b6d4' },
+  { code:'411060', name:'ACE KRX금현물',       sub:'KRX 금 현물',   asset:'금',       color:'#f59e0b' },
+  { code:'261240', name:'KODEX 미국달러선물',  sub:'USD/KRW 선물',  asset:'달러',     color:'#ef4444' },
+  { code:'357870', name:'TIGER CD금리투자KIS', sub:'CD 91일물(MMF)', asset:'MMF',      color:'#6b7280' },
+];
+const N = ETFS.length;
+let cache = {}, curP = 5;
+
+const pad = n => String(n).padStart(2,'0');
+function nowKo(){ const d=new Date(); return d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일'; }
+
+/* ── Anthropic API 호출 ── */
+async function callClaude(prompt) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  const d = await res.json();
+  return d.content.filter(c => c.type === 'text').map(c => c.text).join('');
+}
+
+/* ── 상관계수 요청 ── */
+async function fetchMatrix(years) {
+  const now = new Date();
+  const endY = now.getFullYear(), endM = now.getMonth()+1;
+  const startY = endY - years, startM = endM;
+
+  const etfList = ETFS.map((e,i) => `${i}: ${e.name}(${e.code}) - ${e.asset}`).join('\n');
+
+  const prompt = `당신은 한국 금융시장 전문가입니다. 아래 국내 상장 ETF들의 ${startY}년 ${startM}월부터 ${endY}년 ${endM}월까지 ${years}년간 실제 월별 수익률 데이터를 기반으로 피어슨 상관계수 매트릭스를 추정해주세요.
+
+ETF 목록 (인덱스: ETF명):
+${etfList}
+
+각 ETF의 실제 운용 특성, 기초지수, 환율 노출 여부를 고려하여 최대한 정확하게 추정하세요.
+- KODEX 200(069500): KOSPI200 추종
+- TIGER 미국S&P500(360750): S&P500 추종, 환노출(원화 기준)
+- KODEX 국채선물10년(148070): 한국 국고채 10년 선물
+- TIGER 미국채10년선물(305080): 미국채 10년 선물, 환노출
+- ACE KRX금현물(411060): KRX 금 현물, 원화 기준
+- KODEX 미국달러선물(261240): USD/KRW 달러 선물
+- TIGER CD금리투자KIS(357870): CD 91일물 금리, 초단기채(MMF형)
+
+반드시 JSON만 반환하고 다른 텍스트 없이 출력하세요:
+{"matrix":[[r00,r01,r02,r03,r04,r05,r06],[r10,r11,r12,r13,r14,r15,r16],[r20,r21,r22,r23,r24,r25,r26],[r30,r31,r32,r33,r34,r35,r36],[r40,r41,r42,r43,r44,r45,r46],[r50,r51,r52,r53,r54,r55,r56],[r60,r61,r62,r63,r64,r65,r66]]}
+소수점 2자리, 대각선 1.00, 대칭 행렬.`;
+
+  const text = await callClaude(prompt);
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('JSON 파싱 실패');
+  const { matrix } = JSON.parse(match[0]);
+
+  // 대칭 보정 및 반올림
+  for (let i = 0; i < N; i++) {
+    matrix[i][i] = 1.0;
+    for (let j = i+1; j < N; j++) {
+      const avg = Math.round(((matrix[i][j] + matrix[j][i]) / 2) * 100) / 100;
+      matrix[i][j] = avg;
+      matrix[j][i] = avg;
+    }
+  }
+  return matrix;
+}
+
+/* ── 로드 ── */
+async function load(years) {
+  if (cache[years]) { render(cache[years], years); return; }
+  setPg(10); setSt(true, 'AI가 ETF 상관계수를 계산하는 중...');
+  document.getElementById('mwrap').style.display = 'none';
+  document.getElementById('cards').innerHTML = '';
+  document.getElementById('errbox').style.display = 'none';
+
+  try {
+    setPg(40);
+    const mat = await fetchMatrix(years);
+    setPg(95);
+    cache[years] = { mat, ts: new Date() };
+    setTimeout(() => setPg(0), 500);
+    render(cache[years], years);
+  } catch(e) {
+    setPg(0); setSt(false, '');
+    const eb = document.getElementById('errbox');
+    eb.style.display = 'block';
+    eb.textContent = '⚠ 오류: ' + e.message + ' — 잠시 후 다시 시도해 주세요.';
+  }
+}
+
+/* ── 셀 색상 ── */
+function cs(v) {
+  if (v >= .99) return { bg:'#0f2748', tx:'#60a5fa' };
+  if (v >= .70) return { bg:'#1a4a8a', tx:'#bfdbfe' };
+  if (v >= .40) return { bg:'#2563eb', tx:'#fff'    };
+  if (v >= .15) return { bg:'#1e3a6e', tx:'#93c5fd' };
+  if (v >= -.14)return { bg:'#2a2e3a', tx:'#6b7280' };
+  if (v >= -.39)return { bg:'#6b2e1e', tx:'#fca98a' };
+  if (v >= -.65)return { bg:'#dc2626', tx:'#fff'    };
+  return              { bg:'#7f1d1d', tx:'#fca5a5' };
+}
+function interp(v) {
+  if (v >= .70) return '강한 양의 상관 — 거의 함께 움직임';
+  if (v >= .40) return '중간 양의 상관 — 같은 방향 경향';
+  if (v >= .15) return '약한 양의 상관 — 소폭 동조';
+  if (v >= -.14)return '무상관 — 독립적 움직임';
+  if (v >= -.39)return '약한 음의 상관 — 소폭 분산 효과';
+  if (v >= -.65)return '중간 음의 상관 — 헤지 효과';
+  return               '강한 음의 상관 — 강력한 헤지';
+}
+
+/* ── 렌더 ── */
+function render({ mat, ts }, years) {
+  setSt(false, '');
+  const now = new Date();
+  const sy = now.getFullYear() - years;
+  document.getElementById('pinfo').textContent =
+    sy + '.' + pad(now.getMonth()+1) + ' – ' + now.getFullYear() + '.' + pad(now.getMonth()+1) + '  (월별 수익률)';
+  document.getElementById('ref').innerHTML =
+    '기준일 ' + nowKo() + (ts ? '<br>계산 ' + ts.getHours() + ':' + pad(ts.getMinutes()) : '');
+
+  let h = '<table class="cm" role="grid"><thead><tr><th></th>';
+  for (const e of ETFS)
+    h += `<th class="cth"><span class="cn">${e.asset}</span><span class="cs">${e.code}</span></th>`;
+  h += '</tr></thead><tbody>';
+
+  for (let i = 0; i < N; i++) {
+    h += `<tr><th class="rth"><span class="rn">${ETFS[i].asset}</span><span class="rs">${ETFS[i].code}</span></th>`;
+    for (let j = 0; j < N; j++) {
+      const v = mat[i][j], s = cs(v), diag = i === j;
+      const disp = diag ? '—' : v.toFixed(2);
+      h += `<td class="ctd"><div class="cell ${diag?'diag':'hov'}" style="background:${s.bg};color:${s.tx}" data-i="${i}" data-j="${j}" data-v="${v}">${disp}</div></td>`;
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table>';
+  document.getElementById('mscroll').innerHTML = h;
+  document.getElementById('mwrap').style.display = 'block';
+
+  /* 툴팁 */
+  const tt = document.getElementById('tt');
+  function mv(e) {
+    tt.style.left = Math.min(e.clientX + 16, window.innerWidth - 220) + 'px';
+    tt.style.top  = Math.max(e.clientY - 14, 8) + 'px';
+  }
+  document.querySelectorAll('.cell.hov').forEach(el => {
+    el.addEventListener('mouseenter', function(e) {
+      const i = +this.dataset.i, j = +this.dataset.j, v = +this.dataset.v;
+      document.getElementById('ttp').textContent = ETFS[i].name + ' × ' + ETFS[j].name;
+      const tv = document.getElementById('ttv');
+      tv.textContent = v.toFixed(2);
+      tv.style.color = v > 0.14 ? '#60a5fa' : v < -0.14 ? '#f87171' : '#9ca3af';
+      document.getElementById('ttd').textContent = interp(v);
+      tt.style.display = 'block'; mv(e);
+    });
+    el.addEventListener('mousemove', mv);
+    el.addEventListener('mouseleave', () => tt.style.display = 'none');
+  });
+
+  /* 인사이트 카드 */
+  let mx = -2, mn = 2, mxp = '', mnp = '';
+  for (let i = 0; i < N; i++) for (let j = i+1; j < N; j++) {
+    const v = mat[i][j];
+    if (v > mx) { mx = v; mxp = ETFS[i].asset + ' / ' + ETFS[j].asset; }
+    if (v < mn) { mn = v; mnp = ETFS[i].asset + ' / ' + ETFS[j].asset; }
+  }
+  document.getElementById('cards').innerHTML = `
+    <div class="ic"><div class="icl">최고 양의 상관</div><div class="icv" style="color:#60a5fa">${mx.toFixed(2)}</div><div class="ics">${mxp}</div></div>
+    <div class="ic"><div class="icl">최고 음의 상관</div><div class="icv" style="color:#f87171">${mn.toFixed(2)}</div><div class="ics">${mnp}</div></div>
+    <div class="ic"><div class="icl">조회 기간</div><div class="icv" style="color:#a3e635">${years}Y</div><div class="ics">월별 수익률 기준</div></div>
+    <div class="ic"><div class="icl">ETF 수</div><div class="icv" style="color:#c084fc">${N}개</div><div class="ics">국내 상장 ETF 기준</div></div>
+  `;
+}
+
+/* ── ETF 카드 ── */
+function renderETFGrid() {
+  document.getElementById('etfgrid').innerHTML = ETFS.map(e => `
+    <div class="etf-card">
+      <div class="etf-dot" style="background:${e.color}"></div>
+      <div><div class="etf-name">${e.name}</div><div class="etf-meta">${e.code} · ${e.sub}</div></div>
+    </div>`).join('');
+}
+
+function setPg(p) { document.getElementById('pg').style.width = p + '%'; }
+function setSt(show, msg) {
+  document.getElementById('stbox').style.display = show ? 'flex' : 'none';
+  document.getElementById('stxt').textContent = msg;
+}
+
+/* ── init ── */
+document.getElementById('ref').textContent = '기준일 ' + nowKo();
+renderETFGrid();
+document.querySelectorAll('.pbtn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.pbtn').forEach(b => b.classList.remove('on'));
+    this.classList.add('on');
+    curP = +this.dataset.p;
+    load(curP);
+  });
+});
+load(5);
+</script>
+</body>
+</html>
